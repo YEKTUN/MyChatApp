@@ -38,7 +38,7 @@ const Messages: React.FC<Props> = ({navigation}) => {
         if (doc.exists) {
           setUserData(doc.data());
         } else {
-          console.log('No user data found!');
+          
         }
       });
   
@@ -46,7 +46,12 @@ const Messages: React.FC<Props> = ({navigation}) => {
   }, [user?.uid]);
 
   const getChatRooms = () => {
-    console.log('User Email:', user?.email);
+    if (!user?.email) {
+      
+      navigation.replace('LoginPage');
+      return;
+    }
+    
 
     const roomsFound: any[] = [];
 
@@ -78,12 +83,12 @@ const Messages: React.FC<Props> = ({navigation}) => {
     Promise.all([founderEmailQuery, notFounderEmailQuery])
       .then(() => {
         if (roomsFound.length === 0) {
-          console.log('No chat rooms found for this user.');
+          
           setRooms([]);
           return;
         }
 
-        console.log('Fetched Rooms:', roomsFound);
+        
         setRooms(roomsFound);
       })
       .catch(error => {

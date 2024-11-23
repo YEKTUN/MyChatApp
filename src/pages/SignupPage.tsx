@@ -37,7 +37,7 @@ const saveUserToDatabase = async (uid: string, userData: registerProps) => {
   try {
     await firestore().collection('users').doc(uid).set(userData);
   } catch (error) {
-    console.log(error);
+    
     
   }
 }

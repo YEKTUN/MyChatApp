@@ -34,7 +34,7 @@ import {
             if (user) {
               try {
                 await firestore().collection('users').doc(user.uid).update({tel: telModal});
-                console.log('User about updated!');
+                
                 setTel(telModal);
                 setTelModalVisible(false);
                 setTelModal('');

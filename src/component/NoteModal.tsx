@@ -54,7 +54,7 @@ const NoteModal: FC<Props> = ({noteModal, setNoteModal,noteList}) => {
       setNoteMessage('')
       setNoteSubject('')
     }).catch((error) => {
-      console.log(error)
+      
       setNoteModal(false)
     })
 

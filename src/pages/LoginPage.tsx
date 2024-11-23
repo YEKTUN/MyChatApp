@@ -8,7 +8,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -23,35 +23,26 @@ interface Props {
 const LoginPage: React.FC<Props> = ({navigation}) => {
   const[password,setPassword]=useState<string>("")
   const[email,setEmail]=useState<string>("")
- 
+
   const login = async () => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async userCredential => {
-        await AsyncStorage.setItem('loginTime', Date.now().toString());
-        Alert.alert('User logged in successfully');
-        navigation.replace('HomePage');
-      })
-      .catch(error => {
-        Alert.alert(error.message);
-      });
-  };
-  const checkSession = async () => {
-    const loginTime = await AsyncStorage.getItem('loginTime');
-    if (loginTime) {
-      const timeDifference = Date.now() - parseInt(loginTime, 10);
-      const sessionDuration = 24 * 60 * 60 * 1000; // Örneğin, 24 saatlik süre
-  
-      if (timeDifference > sessionDuration) {
-        // Oturum süresi dolmuşsa çıkış yap
-        auth().signOut();
-        navigation.replace('LoginPage');
-      }
+    try {
+      const userCredential = await auth().signInWithEmailAndPassword(email, password);
+      const token = await userCredential.user.getIdToken(); 
+      const loginTime = Date.now();
+
+
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('loginTime', loginTime.toString());
+
+      Alert.alert('Login Successful');
+      navigation.replace('HomePage');
+    } catch (error:any) {
+      Alert.alert('Login Failed', error.message);
     }
   };
-  useEffect(() => {
-    checkSession();
-  }, []);
+ 
+  
+  
   
   return (
     <SafeAreaView className="flex-1 justify-end bg-black   items-center">

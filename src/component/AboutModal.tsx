@@ -31,7 +31,7 @@ const AboutModal: React.FC<Props> = ({
     if (user) {
       try {
         await firestore().collection('users').doc(user.uid).update({about: aboutModal});
-        console.log('User about updated!');
+        
         setAbout(aboutModal);
         setModalVisible(false);
         setAboutModal('');

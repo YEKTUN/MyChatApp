@@ -85,7 +85,7 @@ const Notes = () => {
       getNotes(currentUser.uid);
     }
   }, [currentUser, noteModal, editNoteModal, noteOptionModal]);
-  console.log(noteOptionModal);
+  
 
   useEffect(() => {
     if(noteOptionModal==true){

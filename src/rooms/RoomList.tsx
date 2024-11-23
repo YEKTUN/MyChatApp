@@ -52,7 +52,7 @@ const RoomList: React.FC<Props> = ({
       console.error('Error fetching photo:', error);
     }
   };
-  console.log('Room ID:', selectedRoomId);
+  
 
   useEffect(() => {
     getPhoto(notFounderEmail);

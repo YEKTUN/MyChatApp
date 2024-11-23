@@ -226,9 +226,7 @@ const Messages: React.FC<Props> = ({navigation, route}) => {
       });
     task.on('state_changed', snapshot => {
       setUploading(true);
-      console.log(
-        `${snapshot.bytesTransferred} transferred out of ${snapshot.totalBytes}`,
-      );
+      
       const percentTransferred = Math.round(
         (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
       );
@@ -263,9 +261,9 @@ const Messages: React.FC<Props> = ({navigation, route}) => {
     } finally {
     }
   };
-  //   console.log("Video URL:", file);
-  // console.log("File Type:", fileType);
-  console.log('FounderMessagesVideo', founderMessages);
+  //   
+  // 
+  
 
   return (
     <SafeAreaView className="flex-1">

@@ -8,6 +8,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
 
+
 type RootStackParamList = {
   HomePage: undefined;
   LoginPage: undefined;
@@ -25,28 +26,43 @@ interface Props{
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App: React.FC<Props> = ({navigation}) => {
-  const [initialRoute, setInitialRoute] = useState<'HomePage' | 'LoginPage'>('LoginPage');
+ 
+ const [initialRoute, setInitialRoute] =useState<'HomePage' | 'LoginPage' | undefined>(undefined);
+ const sessionDuration = 24 * 60 * 60 * 1000; 
 
-  const checkSession = async () => {
-    const loginTime = await AsyncStorage.getItem('loginTime');
-    if (loginTime) {
-      const timeDifference = Date.now() - parseInt(loginTime, 10);
-      const sessionDuration = 24 * 60 * 60 * 1000; // 24 saat
+ const checkSession = async () => {
+   try {
+     const loginTime = await AsyncStorage.getItem('loginTime');
+     const token = await AsyncStorage.getItem('userToken');
 
-      if (timeDifference <= sessionDuration) {
-        setInitialRoute('HomePage');
-      } else {
-        await auth().signOut();
-        setInitialRoute('LoginPage');
-      }
-    } else {
-      setInitialRoute('LoginPage');
-    }
-  };
+     if (loginTime && token) {
+       const timeDifference = Date.now() - parseInt(loginTime, 10);
 
-  useEffect(() => {
-    checkSession();
-  }, []);
+       if (timeDifference <= sessionDuration) {
+      
+         setInitialRoute('HomePage');
+       } else {
+     
+         await AsyncStorage.removeItem('loginTime');
+         await AsyncStorage.removeItem('userToken');
+         await auth().signOut();
+         setInitialRoute('LoginPage');
+       }
+     } else {
+   
+       setInitialRoute('LoginPage');
+     }
+   } catch (error) {
+     console.error('Error checking session:', error);
+     setInitialRoute('LoginPage');
+   }
+ };
+
+ useEffect(() => {
+   checkSession();
+ }, []);
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
